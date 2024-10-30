@@ -14,13 +14,33 @@ func main() {
 	}
 	command := os.Args[1]
 
+	// loda todo files
+	todolist := &TodoList{}
+	err := todolist.Load(filename)
+	if err != nil {
+		fmt.Printf("loading todo file failed: %v", err)
+		return
+	}
+
 	switch command {
 	case "add":
+		if len(os.Args) < 3 {
+			fmt.Println("there should be a title")
+			return
+		}
+		title := os.Args[2]
+		todolist.Add(title)
 	case "list":
 	case "done":
 	case "delete":
 	default:
 		printUsage()
+		return
+	}
+
+	err = todolist.Save(filename)
+	if err != nil {
+		fmt.Printf("save file failed: %v", err)
 		return
 	}
 }
